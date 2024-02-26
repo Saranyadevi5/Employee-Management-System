@@ -7,5 +7,6 @@ CREATE TABLE employee(
     Designation VARCHAR(255), 
     salary int, 
     dob VARCHAR(255), 
-    address VARCHAR(255)
+    age int,
+    gender VARCHAR(255)
 );
