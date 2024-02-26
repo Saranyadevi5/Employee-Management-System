@@ -1,0 +1,41 @@
+:root {
+  --primary-color: #61dafb;
+  --secondary-color: #fb3d3d;
+  --dark-bg: #000000;
+  --dark-secondary: #444;
+  --light-text: #fff;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.5s ease;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.dark-mode {
+  background-color: var(--dark-bg);
+  color: var(--light-text);
+}
+
+button {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+}
+
+.dark-mode .card {
+  background-color: var(--dark-secondary);
+  transition: background-color 0.5s ease;
+}
