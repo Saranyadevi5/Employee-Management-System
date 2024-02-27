@@ -1,9 +1,10 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 
 //components
-import InputTodo from "./components/InputTodo";
-import ListTodos from "./components/ListTodo";
+import InputEmployee from "./components/InputTodo";
+import ListEmployee from "./components/ListTodo";
 
 function App() {
   const [darkMode, setDarkMode] = useState(true);
@@ -18,12 +19,15 @@ function App() {
   }, [darkMode]);
 
   return (
-    <Fragment>
+    <Router>
       <div className="container">
-        <InputTodo />
-       {/* <ListTodos darkMode={darkMode} setDarkMode={setDarkMode}/> */}
+        {/* <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} /> use Navbar */}
+        <Routes>
+          <Route path="/" element={<InputEmployee />} />
+          <Route path="/list" element={<ListEmployee darkMode={darkMode} setDarkMode={setDarkMode}/>} />
+        </Routes>
       </div>
-    </Fragment>
+    </Router>
   );
 }
 

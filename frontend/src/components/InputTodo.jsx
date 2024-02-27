@@ -6,9 +6,9 @@ const InputEmployee = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [setDarkMode, darkMode] = useState(false);
   const [employeeData, setEmployeeData] = useState({
-    name: "",
-    department: "",
-    designation: "",
+    Name: "",
+    Department: "",
+    Designation: "",
     salary: "",
     dob: "",
     address: "",
@@ -16,7 +16,7 @@ const InputEmployee = () => {
   });
   const [error, setError] = useState("");
 
-  const { name, department, designation, salary, dob, address, age } = employeeData;
+  const { name, Department, Designation, salary, dob, address, age } = employeeData;
 
   const onChange = (e) => {
     if (e.target.name === "name") {
@@ -46,14 +46,14 @@ const InputEmployee = () => {
       } else {
         setError("Please enter a valid age.");
       }
-    } else if (e.target.name === "designation") {
-      // Allow only letters and spaces in the designation field
+    } else if (e.target.name === "Designation") {
+      // Allow only letters and spaces in the Designation field
       const onlyLettersAndSpaces = /^[a-zA-Z\s]*$/;
       if (onlyLettersAndSpaces.test(e.target.value) || e.target.value === "") {
         setEmployeeData({ ...employeeData, [e.target.name]: e.target.value });
         setError(""); // Clear error if it was previously set
       } else {
-        setError("Please enter a valid designation.");
+        setError("Please enter a valid Designation.");
       }
     } else if (e.target.name === "salary") {
       const enteredSalary = parseFloat(e.target.value);
@@ -79,7 +79,7 @@ const InputEmployee = () => {
   const onSubmitForm = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/employees", {
+      const response = await fetch("http://localhost:5000/employees/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(employeeData)
@@ -106,7 +106,7 @@ const InputEmployee = () => {
             <input
               type="text"
               className="form-control hover-input color black"
-              id="name"
+              id="Name"
               placeholder="Name"
               name="name"
               value={name}
@@ -115,12 +115,12 @@ const InputEmployee = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="department">Department:</label>
+            <label htmlFor="Department">Department:</label>
             <select
               className="form-control hover-input"
-              id="department"
-              name="department"
-              value={department}
+              id="Department"
+              name="Department"
+              value={Department}
               onChange={onChange}
               required
             >
@@ -136,14 +136,14 @@ const InputEmployee = () => {
             </select>
           </div>
           <div className="form-group">
-            <label htmlFor="designation">Designation:</label>
+            <label htmlFor="Designation">Designation:</label>
             <input
               type="text"
               className="form-control hover-input"
-              id="designation"
+              id="Designation"
               placeholder="Designation"
-              name="designation"
-              value={designation}
+              name="Designation"
+              value={Designation}
               onChange={onChange}
               required
             />

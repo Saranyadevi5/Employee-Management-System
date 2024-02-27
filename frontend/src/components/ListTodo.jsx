@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import EditEmployee from "./EditEmployee";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const ListEmployees = ({ darkMode, setDarkMode }) => {
   const [employees, setEmployees] = useState([]);
@@ -9,10 +8,11 @@ const ListEmployees = ({ darkMode, setDarkMode }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isTableView, setIsTableView] = useState(true);
 
+  const navigate = useNavigate(); // Hook to navigate to different routes
+
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
-  
 
   const deleteEmployee = async (id) => {
     try {
@@ -30,11 +30,10 @@ const ListEmployees = ({ darkMode, setDarkMode }) => {
     }
   };
 
-  const getEmployees = async () => {
+  const getEmployees = async () => { 
     try {
       const response = await fetch("http://localhost:5000/employees");
       const jsonData = await response.json();
-      console.log(jsonData);
       setEmployees(jsonData);
     } catch (err) {
       console.error(err.message);
@@ -45,81 +44,68 @@ const ListEmployees = ({ darkMode, setDarkMode }) => {
     getEmployees();
   }, []);
 
-  const tableStyle = {
-    width: "100%",
-    borderCollapse: "collapse",
-  };
-
-  const cellStyle = {
-    padding: "15px",
-    textAlign: "left",
-  };
-  const buttonCellStyle = {
-    ...cellStyle,
-    textAlign: "center",
-  };
-
-  const headerStyle = {
-    ...cellStyle,
-    backgroundColor: "#4CAF50",
-    color: "white",
-  };
-
   return (
     <Fragment>
-      <div className={`container mt-5 ${darkMode ? "dark-mode" : ""}`}>
-        <button onClick={toggleDarkMode}>
-          <FontAwesomeIcon icon={darkMode ? faSun : faMoon} />
-        </button>
-        <div className="d-flex flex-column align-items-center">
-          <input
-            type="text"
-            className={`form-control w-50 mb-3 ${isEditing ? "" : "hover-input"}`}
-            placeholder="Search by name"
-            onChange={(event) => {
-              setSearchTerm(event.target.value);
-            }}
-          />
+      <div className="container mt-5">
+        <div className="row justify-content-center mb-3">
+          <div className="col-md-6 mb-2 mb-md-0">
+            <input
+              type="text"
+              className={`form-control ${isEditing ? "" : "hover-input"}`}
+              placeholder="Search by name"
+              value={searchTerm}
+              onChange={(event) => {
+                setSearchTerm(event.target.value);
+              }}
+            />
+          </div>
+          <div className="col-md-6 d-flex justify-content-md-end">
+            <button
+              className="btn btn-outline-secondary"
+              onClick={() => navigate("/")}
+            >
+              ADD
+            </button>
+          </div>
         </div>
-        <div className="row justify-content-center mt-3">
+        <div className="row justify-content-center">
           {isTableView && (
-            <table style={tableStyle}>
-              <thead>
+            <table className="table">
+              <thead className="thead-dark">
                 <tr>
-                  <th style={headerStyle}>Name</th>
-                  <th style={headerStyle}>Department</th>
-                  <th style={headerStyle}>Designation</th>
-                  <th style={headerStyle}>Age</th>
-                  <th style={headerStyle}>DOB</th>
-                  <th style={headerStyle}>Gender</th>
-                  <th style={headerStyle}>Salary</th>
-                  <th style={headerStyle}>Edit Data</th>
-                  <th style={headerStyle}>Delete Data</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Department</th>
+                  <th scope="col">Designation</th>
+                  <th scope="col">Age</th>
+                  <th scope="col">DOB</th>
+                  <th scope="col">Gender</th>
+                  <th scope="col">Salary</th>
+                  <th scope="col">Edit Data</th>
+                  <th scope="col">Delete Data</th>
                 </tr>
               </thead>
               <tbody>
                 {employees
                   .filter((employee) => {
                     if (searchTerm === "") {
-                      return employee;
+                      return true; // Include all employees if search term is empty
                     } else if (
-                      employee.name
-                        .toLowerCase()
-                        .includes(searchTerm.toLowerCase())
+                      employee.Name.toLowerCase().includes(searchTerm.toLowerCase())
                     ) {
-                      return employee;
+                      return true; // Include employee if name matches search term
                     }
+                    return false; // Exclude employee if name does not match search term
                   })
                   .map((employee) => (
                     <tr key={employee.emp_id}>
-                      <td>{employee.name}</td>
-                      <td>{employee.department}</td>
-                      <td>{employee.designation}</td>
+                      <td>{employee.Name}</td>
+                      <td>{employee.Department}</td>
+                      <td>{employee.Designation}</td>
                       <td>{employee.age}</td>
                       <td>{employee.dob}</td>
                       <td>{employee.address}</td>
                       <td>{employee.salary}</td>
-                      <td style={buttonCellStyle}>
+                      <td>
                         <EditEmployee
                           employee={employee}
                           onClick={() => {
@@ -128,9 +114,9 @@ const ListEmployees = ({ darkMode, setDarkMode }) => {
                           }}
                         />
                       </td>
-                      <td style={buttonCellStyle}>
+                      <td>
                         <button
-                          className="btn btn-danger ml-2 hover-button"
+                          className="btn btn-danger hover-button"
                           onClick={() => deleteEmployee(employee.emp_id)}
                         >
                           Delete

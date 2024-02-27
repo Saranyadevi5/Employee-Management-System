@@ -1,32 +1,40 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 
 const EditEmployee = ({ employee }) => {
-  const [name, setName] = useState(employee.name);
-  const [department, setDepartment] = useState(employee.department);
-  const [designation, setDesignation] = useState(employee.designation);
-  const [salary, setSalary] = useState(employee.salary);
-  const [dob, setDob] = useState(employee.dob);
-  const [address, setAddress] = useState(employee.address);
-  const [age, setAge ] = useState(employee.age);
   const [employeeData, setEmployeeData] = useState({
-    name: "",
-    department: "",
-    designation: "",
+    Name: "",
+    Department: "",
+    Designation: "",
     salary: "",
     dob: "",
     address: "",
-    age: ""
+    age: "",
+    gender: ""
   });
+
+  // When the component mounts, set the employee data
+  useEffect(() => {
+    setEmployeeData({
+      Name: employee.Name,
+      Department: employee.Department,
+      Designation: employee.Designation,
+      salary: employee.salary,
+      dob: employee.dob,
+      address: employee.address,
+      age: employee.age,
+      gender: employee.gender
+    });
+  }, [employee]);
 
   const onChange = (e) => {
     setEmployeeData({ ...employeeData, [e.target.name]: e.target.value });
   };
 
-
   const updateEmployee = async (e) => {
     e.preventDefault();
     try {
-      const body = { name, department, designation, salary, dob, address, age };
+      const body = { ...employeeData };
+      console.log(body);
       const response = await fetch(
         `http://localhost:5000/employees/${employee.emp_id}`,
         {
@@ -36,7 +44,7 @@ const EditEmployee = ({ employee }) => {
         }
       );
 
-      window.location = "/";
+      window.location = "/list";
     } catch (err) {
       console.error(err.message);
     }
@@ -74,56 +82,61 @@ const EditEmployee = ({ employee }) => {
                     <input
                       type="text"
                       className="form-control"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      name="Name"
+                      value={employeeData.Name}
+                      onChange={onChange}
                     />
                     <label>Department:</label>
                     <select
-          className="form-control hover-input"
-          name="department"
-          value={department}
-          onChange={onChange}
-        >
-          <option value="">Select  Department</option>
-          <option value="Finance">Finance</option>
-          <option value="IT">IT</option>
-          <option value="HR">HR</option>
-          <option value="Marketing">Marketing</option>
-          <option value="Sales">Sales</option>
-          <option value="Operation">Operation</option>
-          <option value="Customer Service">Customer Service</option>
-          <option value="Legal">Legal</option>
-        </select>
+                      className="form-control hover-input"
+                      name="Department"
+                      value={employeeData.Department}
+                      onChange={onChange}
+                    >
+                      <option value="">Select Department</option>
+                      <option value="Finance">Finance</option>
+                      <option value="IT">IT</option>
+                      <option value="HR">HR</option>
+                      <option value="Marketing">Marketing</option>
+                      <option value="Sales">Sales</option>
+                      <option value="Operation">Operation</option>
+                      <option value="Customer Service">Customer Service</option>
+                      <option value="Legal">Legal</option>
+                    </select>
 
                     <label>Designation:</label>
                     <input
                       type="text"
                       className="form-control"
-                      value={designation}
-                      onChange={(e) => setDesignation(e.target.value)}
+                      name="Designation"
+                      value={employeeData.Designation}
+                      onChange={onChange}
                     />
 
                     <label>Age</label>
                     <input
                       type="integer"
                       className="form-control"
-                      value={age}
-                      onChange={(e) => setAge(e.target.value)}
+                      name="age"
+                      value={employeeData.age}
+                      onChange={onChange}
                     />
 
                     <label>DOB:</label>
                     <input
                       type="date"
                       className="form-control"
-                      value={dob}
-                      onChange={(e) => setDob(e.target.value)}
+                      name="dob"
+                      value={employeeData.dob}
+                      onChange={onChange}
                     />
                     <label>Salary</label>
                     <input
                       type="integer"
                       className="form-control"
-                      value={salary}
-                      onChange={(e) => setSalary(e.target.value)}
+                      name="salary"
+                      value={employeeData.salary}
+                      onChange={onChange}
                     />
 
                     <label>Gender:</label>
@@ -134,8 +147,8 @@ const EditEmployee = ({ employee }) => {
                         name="gender"
                         id="genderMale"
                         value="Male"
-                        checked={address === 'Male'}
-                        onChange={(e) => setAddress(e.target.value)}
+                        checked={employeeData.gender === 'Male'}
+                        onChange={onChange}
                       />
                       <label className="form-check-label" htmlFor="genderMale">
                         Male
@@ -148,8 +161,8 @@ const EditEmployee = ({ employee }) => {
                         name="gender"
                         id="genderFemale"
                         value="Female"
-                        checked={address === 'Female'}
-                        onChange={(e) => setAddress(e.target.value)}
+                        checked={employeeData.gender === 'Female'}
+                        onChange={onChange}
                       />
                       <label className="form-check-label" htmlFor="genderFemale">
                         Female
@@ -162,8 +175,8 @@ const EditEmployee = ({ employee }) => {
                         name="gender"
                         id="genderOther"
                         value="Other"
-                        checked={address === 'Other'}
-                        onChange={(e) => setAddress(e.target.value)}
+                        checked={employeeData.gender === 'Other'}
+                        onChange={onChange}
                       />
                       <label className="form-check-label" htmlFor="genderOther">
                         Other
@@ -176,8 +189,8 @@ const EditEmployee = ({ employee }) => {
                         name="gender"
                         id="genderNA"
                         value="N/A"
-                        checked={address === 'N/A'}
-                        onChange={(e) => setAddress(e.target.value)}
+                        checked={employeeData.gender === 'N/A'}
+                        onChange={onChange}
                       />
                       <label className="form-check-label" htmlFor="genderNA">
                         Not to specify
@@ -193,7 +206,7 @@ const EditEmployee = ({ employee }) => {
                   type="button"
                   className="btn btn-warning"
                   data-dismiss="modal"
-                  onClick={(e) => updateEmployee(e)}
+                  onClick={updateEmployee}
                 >
                   Edit
                 </button>
