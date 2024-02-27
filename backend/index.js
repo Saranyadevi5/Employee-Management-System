@@ -86,5 +86,7 @@ app.delete('/employees/:id', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-
+// app.listen(5000, () => {
+//   console.log("server has started on port 5000");
+// });
 module.exports = app;
