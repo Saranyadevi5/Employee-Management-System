@@ -79,7 +79,7 @@ const InputEmployee = () => {
   const onSubmitForm = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/employees/create", {
+      const response = await fetch("https://employee-management-system-g41z.onrender.com/employees/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(employeeData)

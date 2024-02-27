@@ -16,7 +16,7 @@ const ListEmployees = ({ darkMode, setDarkMode }) => {
 
   const deleteEmployee = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/employees/${id}`, {
+      const response = await fetch(`https://employee-management-system-g41z.onrender.com/employees/${id}`, {
         method: "DELETE",
       });
 
@@ -32,7 +32,7 @@ const ListEmployees = ({ darkMode, setDarkMode }) => {
 
   const getEmployees = async () => { 
     try {
-      const response = await fetch("http://localhost:5000/employees");
+      const response = await fetch("https://employee-management-system-g41z.onrender.com/employees");
       const jsonData = await response.json();
       setEmployees(jsonData);
     } catch (err) {

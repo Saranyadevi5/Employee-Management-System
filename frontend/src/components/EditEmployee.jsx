@@ -36,7 +36,7 @@ const EditEmployee = ({ employee }) => {
       const body = { ...employeeData };
       console.log(body);
       const response = await fetch(
-        `http://localhost:5000/employees/${employee.emp_id}`,
+        `https://employee-management-system-g41z.onrender.com/employees/${employee.emp_id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
