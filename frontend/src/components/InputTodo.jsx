@@ -14,11 +14,62 @@ const InputEmployee = () => {
     address: "",
     age: ""
   });
+  const [error, setError] = useState("");
 
   const { name, department, designation, salary, dob, address, age } = employeeData;
 
   const onChange = (e) => {
-    setEmployeeData({ ...employeeData, [e.target.name]: e.target.value });
+    if (e.target.name === "name") {
+      const onlyLetters = /^[a-zA-Z\s]*$/;
+      if (onlyLetters.test(e.target.value) || e.target.value === "") {
+        setEmployeeData({ ...employeeData, [e.target.name]: e.target.value });
+      }
+    } else if (e.target.name === "dob") {
+      const birthYear = new Date(e.target.value).getFullYear();
+      const currentYear = new Date().getFullYear();
+      const calculatedAge = currentYear - birthYear;
+
+      // Allow only birth years before 2004
+      if (birthYear < 2006) {
+        setEmployeeData({ ...employeeData, [e.target.name]: e.target.value, age: calculatedAge });
+        setError(""); // Clear error if it was previously set
+      } else {
+        setError("Please enter a valid birth year.");
+      }
+    } else if (e.target.name === "age") {
+      const enteredAge = parseInt(e.target.value, 10);
+
+      // Allow only ages greater than 0 and less than 2004
+      if (enteredAge > 0 && enteredAge < 2004) {
+        setEmployeeData({ ...employeeData, [e.target.name]: enteredAge });
+        setError(""); // Clear error if it was previously set
+      } else {
+        setError("Please enter a valid age.");
+      }
+    } else if (e.target.name === "designation") {
+      // Allow only letters and spaces in the designation field
+      const onlyLettersAndSpaces = /^[a-zA-Z\s]*$/;
+      if (onlyLettersAndSpaces.test(e.target.value) || e.target.value === "") {
+        setEmployeeData({ ...employeeData, [e.target.name]: e.target.value });
+        setError(""); // Clear error if it was previously set
+      } else {
+        setError("Please enter a valid designation.");
+      }
+    } else if (e.target.name === "salary") {
+      const enteredSalary = parseFloat(e.target.value);
+      if (!isNaN(enteredSalary) && enteredSalary >= 0) {
+        setEmployeeData({ ...employeeData, [e.target.name]: e.target.value });
+      } else if (e.target.value === "") {
+        setEmployeeData({ ...employeeData, [e.target.name]: e.target.value });
+      }
+    
+    } else {
+      setEmployeeData({ ...employeeData, [e.target.name]: e.target.value });
+    }
+  };
+
+  const handleSalaryBackspace = () => {
+    setEmployeeData({ ...employeeData, salary: salary.slice(0, -1) });
   };
 
   const nextPage = () => {
@@ -36,7 +87,7 @@ const InputEmployee = () => {
 
       if (response.ok) {
         console.log("Employee added successfully!");
-        setCurrentPage(3); // Directly show the list after submitting the form
+        setCurrentPage(3);
       } else {
         console.error("Failed to add employee.");
       }
@@ -63,7 +114,6 @@ const InputEmployee = () => {
               required
             />
           </div>
-
           <div className="form-group">
             <label htmlFor="department">Department:</label>
             <select
@@ -85,7 +135,6 @@ const InputEmployee = () => {
               <option value="Legal">Legal</option>
             </select>
           </div>
-
           <div className="form-group">
             <label htmlFor="designation">Designation:</label>
             <input
@@ -102,17 +151,17 @@ const InputEmployee = () => {
           <div className="form-group">
             <label htmlFor="salary">Salary:</label>
             <input
-              type="number"
+              type="text"
               className="form-control hover-input"
               id="salary"
               placeholder="Salary"
               name="salary"
               value={salary}
               onChange={onChange}
+              onKeyDown={(e) => { if (e.keyCode === 8) handleSalaryBackspace(); }}
               required
             />
           </div>
-
           <div className="text-center">
             <button type="submit" className="btn btn-success">Next</button>
           </div>
@@ -133,21 +182,22 @@ const InputEmployee = () => {
               required
             />
           </div>
-
           <div className="form-group">
-            <label htmlFor="address">Gender:</label>
-            <input
-              type="text"
+            <label htmlFor="gender">Gender:</label>
+            <select
               className="form-control hover-input"
-              id="address"
-              placeholder="Gender"
+              id="gender"
               name="address"
               value={address}
               onChange={onChange}
               required
-            />
+            >
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
-
           <div className="form-group">
             <label htmlFor="age">Age:</label>
             <input
@@ -161,13 +211,13 @@ const InputEmployee = () => {
               required
             />
           </div>
-
           <div className="text-center">
             <button className="btn btn-success">Submit</button>
           </div>
+          {error && <p className="text-danger">{error}</p>}
         </form>
       )}
-      {currentPage === 3 &&  <ListEmployees darkMode={darkMode} setDarkMode={setDarkMode}/> }
+      {currentPage === 3 && <ListEmployees darkMode={darkMode} setDarkMode={setDarkMode} />}
     </Fragment>
   );
 };

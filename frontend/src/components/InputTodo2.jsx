@@ -6,10 +6,12 @@ const InputEmployee2 = () => {
   const [employeeData, setEmployeeData] = useState({
     dob: "",
     address: "",
-    age: ""
+    age: "",
+    salary: 0 // Initialize salary to 0
   });
+  const [error, setError] = useState(null);
 
-  const { dob, address, age } = employeeData;
+  const { dob, address, age, salary } = employeeData;
 
   const onChange = (e) => {
     setEmployeeData({ ...employeeData, [e.target.name]: e.target.value });
@@ -17,6 +19,13 @@ const InputEmployee2 = () => {
 
   const onSubmitForm = async (e) => {
     e.preventDefault();
+    
+    // Check if salary is greater than 0
+    if (salary <= 0) {
+      setError("Enter a valid salary");
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:5000/employees", {
         method: "POST",
@@ -84,6 +93,22 @@ const InputEmployee2 = () => {
               required
             />
           </div>
+
+          <div className="form-group">
+            <label htmlFor="salary">Salary:</label>
+            <input
+              type="number"
+              className="form-control hover-input"
+              id="salary"
+              placeholder="Salary"
+              name="salary"
+              value={salary}
+              onChange={onChange}
+              required
+            />
+          </div>
+
+          {error && <div className="text-danger">{error}</div>}
 
           <div className="text-center">
             <button className="btn btn-success">Submit</button>
